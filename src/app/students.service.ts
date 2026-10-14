@@ -19,7 +19,7 @@ export interface NewStudent {
 
 @Injectable({ providedIn: 'root' })
 export class StudentsService {
-  private readonly studentsUrl = `${environment.apiBaseUrl}/students`;
+  private readonly studentsUrl = `${environment.baseUrl}/students`;
 
   constructor(private readonly http: HttpClient) {}
 

@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  baseUrl: 'https://yps-backend-tfux.onrender.com/api/students',
+  baseUrl: 'https://yps-backend-tfux.onrender.com/api',
 };
 /*
  * For easier debugging in development mode, you can import the following file

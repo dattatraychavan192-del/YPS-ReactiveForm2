@@ -8,3 +8,40 @@ html, body {
 }
 
 button, input, select, textarea { font-family: inherit; }
+.print-receipt { display: none; }
+
+@media print {
+  @page { margin: 14mm; }
+  body { background: #fff !important; }
+  body * { visibility: hidden !important; }
+  app-root .print-receipt, app-root .print-receipt * { visibility: visible !important; }
+  app-root .print-receipt {
+    position: absolute !important;
+    inset: 0 !important;
+    display: block !important;
+    width: 100% !important;
+    max-width: none !important;
+    padding: 10mm !important;
+    color: #27211f !important;
+    background: #fff !important;
+    font-family: Arial, sans-serif !important;
+  }
+  .receipt-brand { display: flex; align-items: center; gap: 12px; padding-bottom: 18px; }
+  .receipt-mark { display: grid; width: 42px; height: 42px; place-items: center; border-radius: 10px; background: #ff595f; color: #fff; font-size: 24px; font-weight: 700; }
+  .receipt-brand strong, .receipt-brand small { display: block; }
+  .receipt-brand strong { font-size: 18px; }
+  .receipt-brand small { margin-top: 3px; color: #766b67; font-size: 11px; }
+  .receipt-title { display: flex; align-items: center; justify-content: space-between; margin-top: 14px; }
+  .receipt-title h1 { margin: 0; font-size: 22px; }
+  .receipt-title span { color: #756b66; font-size: 11px; }
+  .receipt-rule { height: 2px; margin: 15px 0 20px; background: #ef7771; }
+  .receipt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 24px; }
+  .receipt-grid small, .receipt-grid strong { display: block; }
+  .receipt-grid small { margin-bottom: 4px; color: #827772; font-size: 10px; text-transform: uppercase; }
+  .receipt-grid strong { font-size: 13px; }
+  .receipt-fee-heading { margin: 28px 0 8px; font-size: 15px; }
+  .receipt-line { display: flex; justify-content: space-between; padding: 10px 2px; border-bottom: 1px solid #eee6e2; font-size: 13px; }
+  .receipt-paid { color: #267145; }
+  .receipt-due { font-weight: 700; }
+  .receipt-thanks { margin-top: 30px; color: #766b67; text-align: center; font-size: 11px; }
+}

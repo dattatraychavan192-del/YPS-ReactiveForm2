@@ -6,15 +6,30 @@ import { environment } from '../environments/environment';
 export interface NewStudent {
   firstName: string;
   lastName: string;
-  email?: string;
+  email: string;
   phone: string;
-  dateOfBirth: string;
   gender: string;
-  standard: string;
-  course: string;
-  guardianName: string;
-  guardianPhone: string;
-  address: string;
+  admissionYear: string;
+  className: string;
+  subjects: string[];
+  selfStudy: boolean;
+  courseFee: number;
+  discount: number;
+  initialPayment: number;
+  paymentDate?: string;
+  paymentMethod?: 'Cash' | 'Online';
+  onlineProvider?: string;
+  remarks: string;
+  photo?: string;
+  totalFees: number;
+  paidAmount: number;
+  pendingFees: number;
+}
+
+export interface StudentRecord extends NewStudent {
+  id: string;
+  createdAt: string;
+  standard?: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -23,7 +38,11 @@ export class StudentsService {
 
   constructor(private readonly http: HttpClient) {}
 
-  createStudent(student: NewStudent): Observable<unknown> {
-    return this.http.post<unknown>(this.studentsUrl, student);
+  getStudents(): Observable<StudentRecord[]> {
+    return this.http.get<StudentRecord[]>(this.studentsUrl);
+  }
+
+  createStudent(student: NewStudent): Observable<StudentRecord> {
+    return this.http.post<StudentRecord>(this.studentsUrl, student);
   }
 }

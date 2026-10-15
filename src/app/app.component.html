@@ -1,124 +1,103 @@
 <main class="page-shell">
   <header class="topbar">
-    <a class="brand" href="/" aria-label="YPS Academy home">
-      <span class="brand-mark">Y</span>
-      <span>YPS <strong>Academy</strong></span>
-    </a>
+    <a class="brand" href="/" aria-label="YPS Academy home"><span class="brand-mark">Y</span><span>YPS <strong>Academy</strong></span></a>
     <span class="portal-label">STUDENT MANAGEMENT</span>
   </header>
 
   <section class="form-card" aria-labelledby="page-title">
     <div class="form-heading">
-      <a class="back-link" href="/students/management">← Back to students</a>
       <p class="eyebrow">STUDENT RECORDS</p>
-      <h1 id="page-title">Add a student</h1>
-      <p class="subtitle">Enter the student's details to add them to YPS Academy.</p>
+      <h1 id="page-title">Student admission</h1>
+      <p class="subtitle">Enter personal, academic, and fee details to create a student record.</p>
     </div>
-
-    <div *ngIf="successMessage" class="alert alert-success" role="status">
-      {{ successMessage }}
-    </div>
-    <div *ngIf="errorMessage" class="alert alert-error" role="alert">
-      {{ errorMessage }}
-    </div>
+    <div *ngIf="successMessage" class="alert alert-success" role="status">{{ successMessage }}</div>
+    <div *ngIf="errorMessage" class="alert alert-error" role="alert">{{ errorMessage }}</div>
 
     <form [formGroup]="studentForm" (ngSubmit)="submit()" novalidate>
       <fieldset [disabled]="isSubmitting">
-        <div class="section-heading">
-          <span class="section-number">01</span>
-          <div>
-            <h2>Student information</h2>
-            <p>Personal and academic details</p>
+        <section class="form-section">
+          <div class="section-heading"><span class="section-icon">●</span><div><h2>Student Information</h2><p>Personal details</p></div></div>
+          <div class="field-grid">
+            <label class="field"><span>First Name <em>*</em></span><input formControlName="firstName" autocomplete="given-name" placeholder="e.g. Aarav" /><small *ngIf="validationMessage('firstName')">{{ validationMessage('firstName') }}</small></label>
+            <label class="field"><span>Last Name <em>*</em></span><input formControlName="lastName" autocomplete="family-name" placeholder="e.g. Sharma" /><small *ngIf="validationMessage('lastName')">{{ validationMessage('lastName') }}</small></label>
+            <label class="field"><span>Email <em>*</em></span><input formControlName="email" type="email" autocomplete="email" placeholder="student@example.com" /><small *ngIf="validationMessage('email')">{{ validationMessage('email') }}</small></label>
+            <label class="field"><span>Contact <em>*</em></span><input formControlName="phone" type="tel" inputmode="numeric" maxlength="10" autocomplete="tel" placeholder="10-digit mobile number" /><small *ngIf="validationMessage('phone')">{{ validationMessage('phone') }}</small></label>
+            <label class="field field-wide"><span>Gender <em>*</em></span><select formControlName="gender"><option value="" disabled>Select gender</option><option *ngFor="let gender of genders" [value]="gender">{{ gender }}</option></select><small *ngIf="validationMessage('gender')">{{ validationMessage('gender') }}</small></label>
+            <div class="photo-upload field-wide">
+              <div class="avatar-preview"><img *ngIf="selectedPhoto" [src]="selectedPhoto" alt="Student photo preview" /><span *ngIf="!selectedPhoto">{{ studentForm.controls.firstName.value ? (studentForm.controls.firstName.value | slice:0:1 | uppercase) : '☺' }}</span></div>
+              <div class="photo-actions"><label class="upload-button" for="student-photo">↑ &nbsp;Upload Photo</label><input #photoInput id="student-photo" type="file" accept="image/jpeg,image/png,image/webp" (change)="onPhotoSelected($event)" /><small>Optional · JPG, PNG, WEBP · Max 2 MB</small><small class="error-text" *ngIf="photoError">{{ photoError }}</small></div>
+            </div>
           </div>
-        </div>
+        </section>
 
-        <div class="field-grid">
-          <label class="field">
-            <span>First name <em>*</em></span>
-            <input formControlName="firstName" type="text" autocomplete="given-name" placeholder="e.g. Aarav" />
-            <small *ngIf="validationMessage('firstName')">{{ validationMessage('firstName') }}</small>
-          </label>
-          <label class="field">
-            <span>Last name <em>*</em></span>
-            <input formControlName="lastName" type="text" autocomplete="family-name" placeholder="e.g. Sharma" />
-            <small *ngIf="validationMessage('lastName')">{{ validationMessage('lastName') }}</small>
-          </label>
-          <label class="field">
-            <span>Email address</span>
-            <input formControlName="email" type="email" autocomplete="email" placeholder="student@example.com" />
-            <small *ngIf="validationMessage('email')">{{ validationMessage('email') }}</small>
-          </label>
-          <label class="field">
-            <span>Student phone <em>*</em></span>
-            <input formControlName="phone" type="tel" inputmode="numeric" autocomplete="tel" maxlength="10" placeholder="10-digit mobile number" />
-            <small *ngIf="validationMessage('phone')">{{ validationMessage('phone') }}</small>
-          </label>
-          <label class="field">
-            <span>Date of birth <em>*</em></span>
-            <input formControlName="dateOfBirth" type="date" [max]="maxDate" />
-            <small *ngIf="validationMessage('dateOfBirth')">{{ validationMessage('dateOfBirth') }}</small>
-          </label>
-          <label class="field">
-            <span>Gender <em>*</em></span>
-            <select formControlName="gender">
-              <option value="" disabled>Select gender</option>
-              <option *ngFor="let gender of genders" [value]="gender">{{ gender }}</option>
-            </select>
-            <small *ngIf="validationMessage('gender')">{{ validationMessage('gender') }}</small>
-          </label>
-          <label class="field">
-            <span>Standard <em>*</em></span>
-            <select formControlName="standard">
-              <option value="" disabled>Select standard</option>
-              <option *ngFor="let standard of standards" [value]="standard">Standard {{ standard }}</option>
-            </select>
-            <small *ngIf="validationMessage('standard')">{{ validationMessage('standard') }}</small>
-          </label>
-          <label class="field">
-            <span>Course <em>*</em></span>
-            <select formControlName="course">
-              <option value="" disabled>Select course</option>
-              <option *ngFor="let course of courses" [value]="course">{{ course }}</option>
-            </select>
-            <small *ngIf="validationMessage('course')">{{ validationMessage('course') }}</small>
-          </label>
-        </div>
-
-        <div class="section-heading guardian-heading">
-          <span class="section-number">02</span>
-          <div>
-            <h2>Parent / guardian</h2>
-            <p>Contact information for the student's guardian</p>
+        <section class="form-section">
+          <div class="section-heading"><span class="section-icon">◆</span><div><h2>Academic Details</h2><p>Class, subjects &amp; admission year</p></div></div>
+          <div class="field-grid">
+            <label class="field"><span>Year of Admission <em>*</em></span><input formControlName="admissionYear" placeholder="2026-27" /><small>Use academic session format like 2026-27</small><small *ngIf="validationMessage('admissionYear')">{{ validationMessage('admissionYear') }}</small></label>
+            <label class="field"><span>Class <em>*</em></span><select formControlName="className" (change)="onClassChange()"><option value="" disabled>Select Class</option><option *ngFor="let className of classes" [value]="className">Class {{ className }}</option></select><small *ngIf="validationMessage('className')">{{ validationMessage('className') }}</small></label>
+            <div class="field field-wide"><span>Subjects <em>*</em></span>
+              <div class="subject-picker" [class.has-error]="validationMessage('subjects')" *ngIf="availableSubjects.length; else chooseClass"><label *ngFor="let subject of availableSubjects" class="subject-option"><input type="checkbox" [checked]="studentForm.controls.subjects.value.includes(subject)" (change)="toggleSubject(subject, $event)" />{{ subject }}</label></div>
+              <ng-template #chooseClass><div class="subject-placeholder">Select a class above to see available subjects</div></ng-template>
+              <small *ngIf="validationMessage('subjects')">Select at least one subject.</small>
+            </div>
+            <label class="check-option field-wide"><input formControlName="selfStudy" type="checkbox" /><span>♟ &nbsp;Self Study Mode</span></label>
           </div>
-        </div>
+        </section>
 
-        <div class="field-grid">
-          <label class="field">
-            <span>Guardian name <em>*</em></span>
-            <input formControlName="guardianName" type="text" autocomplete="name" placeholder="Full name" />
-            <small *ngIf="validationMessage('guardianName')">{{ validationMessage('guardianName') }}</small>
-          </label>
-          <label class="field">
-            <span>Guardian phone <em>*</em></span>
-            <input formControlName="guardianPhone" type="tel" inputmode="numeric" maxlength="10" placeholder="10-digit mobile number" />
-            <small *ngIf="validationMessage('guardianPhone')">{{ validationMessage('guardianPhone') }}</small>
-          </label>
-          <label class="field field-wide">
-            <span>Address <em>*</em></span>
-            <textarea formControlName="address" rows="3" autocomplete="street-address" placeholder="House number, street, area, city"></textarea>
-            <small *ngIf="validationMessage('address')">{{ validationMessage('address') }}</small>
-          </label>
-        </div>
+        <section class="form-section fee-section">
+          <div class="section-heading fee-heading"><span class="section-icon">▣</span><div><h2>Fee Details</h2></div><span class="fee-caption">₹{{ totalFees | number:'1.2-2' }} | Pending: ₹{{ pendingFees | number:'1.2-2' }}</span></div>
+          <div class="field-grid">
+            <label class="field"><span>Total Course Fees (₹) <em>*</em></span><input formControlName="courseFee" type="number" min="0" step="0.01" /><small>Enter the fee amount for the selected class and subjects.</small><small *ngIf="validationMessage('courseFee')">{{ validationMessage('courseFee') }}</small></label>
+            <label class="field"><span>Discount (₹)</span><input formControlName="discount" type="number" min="0" step="0.01" /><small>Optional flat discount deducted from total fees.</small><small *ngIf="validationMessage('discount')">{{ validationMessage('discount') }}</small></label>
+          </div>
+          <div class="fee-summary"><div><span>Total Fees:</span><strong>₹{{ totalFees | number:'1.2-2' }}</strong></div><div><span>Paid Amount:</span><strong class="paid">₹{{ paidAmount | number:'1.2-2' }}</strong></div><div><span>Pending Fees:</span><strong>₹{{ pendingFees | number:'1.2-2' }}</strong></div></div>
+          <button type="button" class="breakdown-toggle" (click)="breakdownOpen = !breakdownOpen"><span>▤ &nbsp; Fee Breakdown</span><span>{{ breakdownOpen ? '⌃' : '⌄' }}</span></button>
+          <div class="breakdown-content" *ngIf="breakdownOpen"><div><span>Course fees</span><span>₹{{ totalFees | number:'1.2-2' }}</span></div><div><span>Discount</span><span>− ₹{{ discount | number:'1.2-2' }}</span></div><div class="breakdown-total"><span>Net fees</span><strong>₹{{ payableFees | number:'1.2-2' }}</strong></div></div>
+
+          <h3 class="payment-title">▤ &nbsp; Initial Payment <span>(Optional)</span></h3>
+          <div class="field-grid">
+            <label class="field"><span>Payment Amount (₹)</span><input formControlName="initialPayment" type="number" min="0" step="0.01" /><small>Enter payment amount (optional)</small><small *ngIf="validationMessage('initialPayment')">{{ validationMessage('initialPayment') }}</small></label>
+            <label class="field"><span>Payment Date</span><input formControlName="paymentDate" type="date" [max]="today" /><small class="field-error" *ngIf="validationMessage('paymentDate')">{{ validationMessage('paymentDate') }}</small></label>
+          </div>
+          <div class="payment-method-block" *ngIf="paidAmount > 0">
+            <span class="payment-label">Payment Method <em>*</em></span>
+            <div class="payment-choices"><label><input type="radio" formControlName="paymentMethod" value="Cash" (change)="onPaymentMethodChange('Cash')" /> Cash</label><label><input type="radio" formControlName="paymentMethod" value="Online" (change)="onPaymentMethodChange('Online')" /> Online</label></div>
+            <small class="field-error" *ngIf="validationMessage('paymentMethod')">{{ validationMessage('paymentMethod') }}</small>
+            <label class="field provider-field" *ngIf="studentForm.controls.paymentMethod.value === 'Online'"><span>Online payment method <em>*</em></span><select formControlName="onlineProvider"><option value="">Select method</option><option *ngFor="let method of onlineMethods" [value]="method">{{ method }}</option></select><small class="field-error" *ngIf="validationMessage('onlineProvider')">{{ validationMessage('onlineProvider') }}</small></label>
+          </div>
+          <label class="field remarks-field"><span>Remarks</span><textarea formControlName="remarks" rows="3" placeholder="Add a note about this admission or payment"></textarea><small *ngIf="validationMessage('remarks')">{{ validationMessage('remarks') }}</small></label>
+        </section>
       </fieldset>
-
-      <div class="form-footer">
-        <p><em>*</em> Required fields</p>
-        <button type="submit" [disabled]="isSubmitting">
-          <span *ngIf="!isSubmitting">Add student <span aria-hidden="true">→</span></span>
-          <span *ngIf="isSubmitting">Saving…</span>
-        </button>
-      </div>
+      <div class="form-footer"><p><em>*</em> Required fields</p><button type="submit" [disabled]="isSubmitting"><span *ngIf="!isSubmitting">{{ isSubmitting ? 'Saving…' : 'Add student' }} &nbsp;→</span><span *ngIf="isSubmitting">Saving…</span></button></div>
     </form>
   </section>
-  <footer>© {{ currentYear }} YPS Academy <span>·</span> Student Management</footer>
+
+  <section class="student-list" *ngIf="students.length" aria-labelledby="students-heading">
+    <div class="list-heading"><div><p class="eyebrow">ADMISSIONS</p><h2 id="students-heading">Student Information</h2></div><span class="student-count">{{ students.length }} students</span></div>
+    <article class="student-card" *ngFor="let student of students">
+      <div class="student-avatar"><img *ngIf="student.photo" [src]="student.photo" [alt]="student.firstName + ' ' + student.lastName" /><span *ngIf="!student.photo">{{ student.firstName | slice:0:1 | uppercase }}</span></div>
+      <div class="student-details"><h3>{{ student.firstName }} {{ student.lastName }}</h3><p>{{ student.email || 'No email' }} <span>·</span> {{ student.phone }}</p><div class="student-tags"><span>Class {{ student.className || student.standard || '—' }}</span><span>{{ student.admissionYear || 'Existing record' }}</span><span *ngIf="student.selfStudy">Self Study</span></div><p class="subject-summary" *ngIf="student.subjects?.length">{{ student.subjects.join(', ') }}</p></div>
+      <div class="student-fees" *ngIf="student.totalFees !== undefined"><span>Paid ₹{{ student.paidAmount | number:'1.2-2' }}</span><strong>Due ₹{{ student.pendingFees | number:'1.2-2' }}</strong><small *ngIf="student.paymentMethod">{{ student.paymentMethod === 'Cash' ? 'Cash' : student.onlineProvider }}</small><button type="button" class="print-button" *ngIf="student.paidAmount > 0" (click)="printReceipt(student)">Print receipt</button></div>
+    </article>
+  </section>
+  <section class="print-receipt" *ngIf="printStudent as receipt">
+    <div class="receipt-brand"><span class="receipt-mark">Y</span><div><strong>YPS Academy</strong><small>Fee payment receipt</small></div></div>
+    <div class="receipt-title"><h1>Payment Receipt</h1><span>Receipt #{{ receipt.id | slice:0:8 | uppercase }}</span></div>
+    <div class="receipt-rule"></div>
+    <div class="receipt-grid">
+      <div><small>Student name</small><strong>{{ receipt.firstName }} {{ receipt.lastName }}</strong></div>
+      <div><small>Contact</small><strong>{{ receipt.phone }}</strong></div>
+      <div><small>Class / Session</small><strong>Class {{ receipt.className }} · {{ receipt.admissionYear }}</strong></div>
+      <div><small>Payment date</small><strong>{{ receipt.paymentDate || receipt.createdAt | date:'mediumDate' }}</strong></div>
+      <div><small>Payment method</small><strong>{{ receipt.paymentMethod === 'Cash' ? 'Cash' : receipt.onlineProvider }}</strong></div>
+      <div><small>Subjects</small><strong>{{ receipt.subjects.join(', ') }}</strong></div>
+    </div>
+    <h2 class="receipt-fee-heading">Fee summary</h2>
+    <div class="receipt-line"><span>Total fees</span><strong>₹{{ receipt.totalFees | number:'1.2-2' }}</strong></div>
+    <div class="receipt-line"><span>Discount</span><strong>− ₹{{ receipt.discount | number:'1.2-2' }}</strong></div>
+    <div class="receipt-line receipt-paid"><span>Amount received</span><strong>₹{{ receipt.paidAmount | number:'1.2-2' }}</strong></div>
+    <div class="receipt-line receipt-due"><span>Balance pending</span><strong>₹{{ receipt.pendingFees | number:'1.2-2' }}</strong></div>
+    <p class="receipt-thanks">Thank you. Please keep this receipt for your records.</p>
+  </section>
+  <footer>© {{ today | slice:0:4 }} YPS Academy <span>·</span> Student Management</footer>
 </main>

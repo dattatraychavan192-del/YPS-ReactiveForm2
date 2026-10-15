@@ -231,6 +231,10 @@ export class AppComponent implements OnInit {
 
   private requestErrorMessage(error: HttpErrorResponse): string {
     const response = error.error as { message?: unknown } | null;
+    if (error.status >= 500) {
+      const detail = response && typeof response.message === 'string' ? ` Server response: ${response.message}` : '';
+      return `The backend could not save this student (HTTP ${error.status}). Check the backend deployment and storage logs.${detail}`;
+    }
     if (response && typeof response.message === 'string') return response.message;
     if (error.status === 0) return 'Could not reach the student service. Check that the deployed backend is available and try again.';
     if (error.status === 409) return 'A student with this phone number already exists.';
